@@ -1,8 +1,5 @@
 const SHA256 = require("crypto-js/sha256");
-const config = require("../config");
 const fork = require("child_process").fork;
-
-const DIFFICULTY = config.difficulty;
 
 class Block {
     constructor(time, lastHash, hash, data, nonce) {
@@ -27,25 +24,23 @@ class Block {
         return new this('Genesis time', '-', 'first hash', [], 0);
     }
 
-    static mineBlock(lastBlock, data) {
-        let hash, time;
+    static async mineBlock(lastBlock, data) {
         const lastHash = lastBlock.hash;
-        let nonce = 0;
-
-        do {
-            nonce++;
-            time = Date.now();
-            hash = Block.hash(time, lastHash, data, nonce);
-        } while (hash.substring(0, DIFFICULTY) !== '0'.repeat(DIFFICULTY))
 
         const forked = fork(`${__dirname}/mineHash.js`);
-        forked.on("message", msg => {
-            console.log('Message from forked', msg);
-        })
-        forked.send({
-            lastHash,
-            data
+        const p = new Promise((resolve, reject) => {
+            forked.send({
+                lastHash,
+                data
+            });
+            forked.on("message", resolve);
+            forked.on("error", reject);
         });
+        const {
+            hash,
+            time,
+            nonce
+        } = await p;
 
         return new this(time, lastHash, hash, data, nonce);
     }

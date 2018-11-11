@@ -9,10 +9,10 @@ const config = require("../src/config");
 describe('Block', () => {
     let data, lastBlock, block;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         data = 'some data';
         lastBlock = Block.genesis();
-        block = Block.mineBlock(lastBlock, data);
+        block = await Block.mineBlock(lastBlock, data);
     });
 
     it('genesis', () => {
@@ -32,8 +32,8 @@ describe('Block', () => {
         expect(block.lastHash).eq(lastBlock.hash);
     });
 
-    it('generate hash that match difficulty', () => {
-        const b = Block.mineBlock(block, 'some');
+    it('generate hash that match difficulty', async () => {
+        const b = await Block.mineBlock(block, 'some');
         expect(b.lastHash.substring(0, config.difficulty)).eq('0'.repeat(config.difficulty));
     });
 })

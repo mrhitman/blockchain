@@ -1,3 +1,3 @@
 module.exports = {
-    difficulty: 3
+    difficulty: 2
 }

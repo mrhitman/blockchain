@@ -14,8 +14,8 @@ app.get("/blocks", (req, res) => {
     res.json(bc.chain);
 });
 
-app.post("/mine", (req, res) => {
-    const block = bc.addBlock(req.body.data);
+app.post("/mine", async (req, res) => {
+    const block = await bc.addBlock(req.body.data);
     global.console.log(`New block added ${block.toString()}`);
 
     p2pserver.syncChains();
