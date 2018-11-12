@@ -1,6 +1,6 @@
-const SHA256 = require("crypto-js/sha256");
 const fork = require("child_process").fork;
 const config = require("../config");
+const ChainUtil = require("./chain-util");
 
 class Block {
   constructor(time, lastHash, hash, data, nonce, difficulty) {
@@ -24,14 +24,7 @@ class Block {
   }
 
   static genesis() {
-    return new this(
-      "Genesis time",
-      "-",
-      "first hash",
-      [],
-      0,
-      config.difficulty
-    );
+    return new this("Genesis time", "-", "first hash", [], 0, config.difficulty);
   }
 
   static async mineBlock(lastBlock, data) {
@@ -47,7 +40,7 @@ class Block {
   }
 
   static hash(time, lastHash, data, nonce, difficulty) {
-    return SHA256(`${time}${lastHash}${data}${nonce}${difficulty}`).toString();
+    return ChainUtil.hash(`${time}${lastHash}${data}${nonce}${difficulty}`);
   }
 
   static blockHash(block) {

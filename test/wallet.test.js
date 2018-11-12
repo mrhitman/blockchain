@@ -9,5 +9,4 @@ describe("Wallet", () => {
     const wallet = new Wallet();
     expect(wallet).haveOwnProperty("balance");
   });
-
 });

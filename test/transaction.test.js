@@ -28,7 +28,11 @@ describe("Transaction", () => {
   });
 
   it("transaction amount exceed the balance", () => {
-    const trx = Transacton.newTransaction(wallet, recipient, 4000);
+    trx = Transacton.newTransaction(wallet, recipient, 4000);
     expect(trx).undefined;
+  });
+
+  it("inputs the balance of the wallet", () => {
+    expect(trx.input.amount).eq(wallet.balance);
   });
 });
