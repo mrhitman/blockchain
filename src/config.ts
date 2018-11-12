@@ -1,5 +1,5 @@
 export default {
-  difficulty: 2,
-  mine_rate: 1000,
+  difficulty: 1,
+  mine_rate: 200,
   initial_balance: 500
 };

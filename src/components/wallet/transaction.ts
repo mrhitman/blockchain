@@ -1,4 +1,5 @@
 import chainUtil from "../chain-util";
+import ChainUtil from "../chain-util";
 
 type InputType = null | {
   time: number;
@@ -13,7 +14,7 @@ type OutputType = {
 };
 
 class Transaction {
-  public id: number;
+  public id: string;
   public input: InputType;
   public outputs: Array<OutputType>;
 
@@ -52,6 +53,14 @@ class Transaction {
       address: senderWallet.publicKey,
       signature: senderWallet.sign(chainUtil.hash(this.outputs))
     };
+  }
+
+  verifyTransaction() {
+    return ChainUtil.verifySignature(
+      this.input.address,
+      this.input.signature,
+      ChainUtil.hash(this.outputs)
+    );
   }
 }
 

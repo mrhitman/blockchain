@@ -35,4 +35,13 @@ describe("Transaction", () => {
   it("inputs the balance of the wallet", () => {
     expect(trx.input.amount).eq(wallet.balance);
   });
+
+  it("validate a valid transaction", () => {
+    expect(trx.verifyTransaction()).true;
+  });
+
+  it("invalidate a corrupt transaction", () => {
+    trx.outputs[0].amount = 40000;
+    expect(trx.verifyTransaction()).false;
+  });
 });
