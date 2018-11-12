@@ -1,8 +1,8 @@
 // require("dotenv").load();
-const express = require("express");
-const Blockchain = require("./components/blockchain");
-const bodyParser = require("body-parser");
-const P2PServer = require("./p2p-server");
+import * as express from "express";
+import Blockchain from "./components/blockchain";
+import * as bodyParser from "body-parser";
+import P2PServer from "./p2p-server";
 
 const app = express();
 const bc = new Blockchain();

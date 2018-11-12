@@ -1,8 +1,8 @@
 /**
  * @global describe, it, beforeEach
  */
-const Transacton = require("../src/components/wallet/transaction");
-const Wallet = require("../src/components/wallet");
+const Transacton = require("../dist/components/wallet/transaction").default;
+const Wallet = require("../dist/components/wallet").default;
 const expect = require("chai").expect;
 
 describe("Transaction", () => {

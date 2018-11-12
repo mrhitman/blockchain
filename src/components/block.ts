@@ -1,8 +1,15 @@
-const fork = require("child_process").fork;
-const config = require("../config");
-const ChainUtil = require("./chain-util");
+import { fork } from "child_process";
+import config from "../config";
+import ChainUtil from "./chain-util";
 
 class Block {
+  protected time: number;
+  protected lastHash: string;
+  protected hash: string;
+  protected data: any;
+  protected nonce: number;
+  protected difficulty: number;
+
   constructor(time, lastHash, hash, data, nonce, difficulty) {
     this.time = time;
     this.lastHash = lastHash;
@@ -34,7 +41,7 @@ class Block {
       forked.on("message", resolve);
       forked.on("error", reject);
     });
-    const { hash, time, nonce, difficulty } = await p;
+    const { hash, time, nonce, difficulty } = (await p) as any;
 
     return new this(time, lastBlock.hash, hash, data, nonce, difficulty);
   }
@@ -55,4 +62,4 @@ class Block {
   }
 }
 
-module.exports = Block;
+export default Block;

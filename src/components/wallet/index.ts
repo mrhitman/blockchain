@@ -1,7 +1,11 @@
-const config = require("../../config");
-const chainUtil = require("../chain-util");
+import config from "../../config";
+import chainUtil from "../chain-util";
 
 class Wallet {
+  public balance: number;
+  public keyPair: any;
+  public publicKey: string;
+
   constructor() {
     this.balance = config.initial_balance;
     this.keyPair = chainUtil.genKeyPair();
@@ -20,4 +24,4 @@ class Wallet {
   }
 }
 
-module.exports = Wallet;
+export default Wallet;

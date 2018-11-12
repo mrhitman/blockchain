@@ -1,21 +1,24 @@
-const WebSocket = require("ws");
+import { Server, WebSocket } from "ws";
+import Blockchain from "./components/blockchain";
 
 const port = process.env.WS_PORT || 2000;
 const peers = process.env.PEERS ? process.env.PEERS.split(",") : [];
 
 class P2PServer {
+  protected blockchain: Blockchain;
+  protected sockets: Array<WebSocket>;
   constructor(blockchain) {
     this.blockchain = blockchain;
     this.sockets = [];
   }
 
   listen() {
-    const server = new WebSocket.Server({ port });
+    const server = new Server({ port });
     server.on("connection", this.connectSocket.bind(this));
 
     this.connectToPeers();
 
-    global.console.log(`Listen p2p server on ${port}`);
+    console.log(`Listen p2p server on ${port}`);
   }
 
   connectToPeers() {
@@ -52,4 +55,4 @@ class P2PServer {
   }
 }
 
-module.exports = P2PServer;
+export default P2PServer;

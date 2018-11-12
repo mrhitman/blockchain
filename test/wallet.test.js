@@ -1,7 +1,7 @@
 /**
  * @global describe, it, beforeEach
  */
-const Wallet = require("../src/components/wallet");
+const Wallet = require("../dist/components/wallet").default;
 const expect = require("chai").expect;
 
 describe("Wallet", () => {

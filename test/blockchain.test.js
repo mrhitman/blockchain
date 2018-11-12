@@ -2,8 +2,8 @@
  * @global describe, it, beforeEach
  */
 
-const Blockchain = require("../src/components/blockchain");
-const Block = require("../src/components/block");
+const Blockchain = require("../dist/components/blockchain").default;
+const Block = require("../dist/components/block").default;
 const expect = require("chai").expect;
 
 describe("Blockchain", () => {

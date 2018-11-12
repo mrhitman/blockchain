@@ -1,6 +1,22 @@
-const chainUtil = require("../chain-util");
+import chainUtil from "../chain-util";
+
+type InputType = null | {
+  time: number;
+  amount: number;
+  address: string;
+  signature: string;
+};
+
+type OutputType = {
+  amount: number;
+  address: string;
+};
 
 class Transaction {
+  public id: number;
+  public input: InputType;
+  public outputs: Array<OutputType>;
+
   constructor() {
     this.id = chainUtil.id();
     this.input = null;
@@ -39,4 +55,4 @@ class Transaction {
   }
 }
 
-module.exports = Transaction;
+export default Transaction;

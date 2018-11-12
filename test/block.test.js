@@ -3,8 +3,8 @@
  */
 
 const expect = require("chai").expect;
-const Block = require("../src/components/block");
-const config = require("../src/config");
+const Block = require("../dist/components/block").default;
+const config = require("../dist/config").default;
 
 describe("Block", () => {
   let data, lastBlock, block;

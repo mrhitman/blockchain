@@ -1,5 +1,5 @@
-const Block = require("./block");
-const config = require("../config");
+import Block from "./block";
+import config from "../config";
 
 process.on("message", ({ lastBlock, data }) => {
   let hash, time;
