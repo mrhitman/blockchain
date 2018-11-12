@@ -25,11 +25,11 @@ class Transaction {
       ]
     );
 
-    transaction.sign(senderWallet);
+    transaction.signTransaction(senderWallet);
     return transaction;
   }
 
-  sign(senderWallet) {
+  signTransaction(senderWallet) {
     this.input = {
       time: Date.now(),
       amount: senderWallet.balance,
