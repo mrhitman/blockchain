@@ -23,6 +23,10 @@ app.post("/mine", async (req, res) => {
     res.redirect("/blocks");
 });
 
+app.get("/wallet", (req, res) => {
+
+});
+
 const port = process.env.HTTP_PORT || 3000;
 app.listen(port, () => global.console.log(`Server started on ${port}`));
 p2pserver.listen();

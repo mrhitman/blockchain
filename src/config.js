@@ -1,4 +1,5 @@
 module.exports = {
-    difficulty: 1,
-    mine_rate: 2000,
+    difficulty: 2,
+    mine_rate: 1000,
+    initial_balance: 500,
 }
