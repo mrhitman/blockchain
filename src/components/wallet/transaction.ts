@@ -1,5 +1,5 @@
-import chainUtil from "../chain-util";
 import ChainUtil from "../chain-util";
+import Wallet from ".";
 
 type InputType = null | {
   time: number;
@@ -15,16 +15,14 @@ type OutputType = {
 
 class Transaction {
   public id: string;
-  public input: InputType;
-  public outputs: Array<OutputType>;
+  public input: InputType = null;
+  public outputs: Array<OutputType> = [];
 
   constructor() {
-    this.id = chainUtil.id();
-    this.input = null;
-    this.outputs = [];
+    this.id = ChainUtil.id();
   }
 
-  static newTransaction(senderWallet, receipient, amount) {
+  static newTransaction(senderWallet: Wallet, receipient: string, amount: number) {
     const transaction = new this();
 
     if (amount > senderWallet.balance) {
@@ -46,12 +44,12 @@ class Transaction {
     return transaction;
   }
 
-  signTransaction(senderWallet) {
+  signTransaction(senderWallet: Wallet) {
     this.input = {
       time: Date.now(),
       amount: senderWallet.balance,
       address: senderWallet.publicKey,
-      signature: senderWallet.sign(chainUtil.hash(this.outputs))
+      signature: senderWallet.sign(ChainUtil.hash(this.outputs))
     };
   }
 

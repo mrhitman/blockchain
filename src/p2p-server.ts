@@ -18,7 +18,7 @@ class P2PServer {
 
     this.connectToPeers();
 
-    console.log(`Listen p2p server on ${port}`);
+    global.console.log(`Listen p2p server on ${port}`);
   }
 
   connectToPeers() {
@@ -28,7 +28,7 @@ class P2PServer {
     });
   }
 
-  connectSocket(socket) {
+  connectSocket(socket: WebSocket) {
     this.sockets.push(socket);
     global.console.log("Socket connected");
 
@@ -36,7 +36,7 @@ class P2PServer {
     this.sendChain(socket);
   }
 
-  messageHandler(socket) {
+  messageHandler(socket: WebSocket) {
     socket.on("message", message => {
       const data = JSON.parse(message);
 
@@ -44,7 +44,7 @@ class P2PServer {
     });
   }
 
-  sendChain(socket) {
+  sendChain(socket: WebSocket) {
     socket.send(JSON.stringify(this.blockchain.chain));
   }
 

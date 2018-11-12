@@ -3,12 +3,12 @@ import config from "../config";
 import ChainUtil from "./chain-util";
 
 class Block {
-  protected time: number;
-  protected lastHash: string;
-  protected hash: string;
-  protected data: any;
-  protected nonce: number;
-  protected difficulty: number;
+  public time: number;
+  public lastHash: string;
+  public hash: string;
+  public data: any;
+  public nonce: number;
+  public difficulty: number;
 
   constructor(time, lastHash, hash, data, nonce, difficulty) {
     this.time = time;
@@ -34,7 +34,7 @@ class Block {
     return new this("Genesis time", "-", "first hash", [], 0, config.difficulty);
   }
 
-  static async mineBlock(lastBlock, data) {
+  static async mineBlock(lastBlock: Block, data) {
     const forked = fork(`${__dirname}/mineHash.js`);
     const p = new Promise((resolve, reject) => {
       forked.send({ lastBlock, data });
@@ -46,16 +46,16 @@ class Block {
     return new this(time, lastBlock.hash, hash, data, nonce, difficulty);
   }
 
-  static hash(time, lastHash, data, nonce, difficulty) {
+  static hash(time: number, lastHash: string, data, nonce: number, difficulty: number) {
     return ChainUtil.hash(`${time}${lastHash}${data}${nonce}${difficulty}`);
   }
 
-  static blockHash(block) {
+  static blockHash(block: Block) {
     const { time, lastHash, data, nonce, difficulty } = block;
     return Block.hash(time, lastHash, data, nonce, difficulty);
   }
 
-  static adjustDifficulty(lastBlock, time) {
+  static adjustDifficulty(lastBlock: Block, time: number) {
     return lastBlock.time + config.mine_rate > time
       ? lastBlock.difficulty + 1
       : lastBlock.difficulty - 1;

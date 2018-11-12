@@ -15,7 +15,7 @@ class Blockchain {
     return block;
   }
 
-  isValidChain(chain) {
+  isValidChain(chain: Array<Block>) {
     if (JSON.stringify(chain[0]) !== JSON.stringify(Block.genesis())) {
       return false;
     }
@@ -33,7 +33,7 @@ class Blockchain {
     return true;
   }
 
-  replaceChain(newChain) {
+  replaceChain(newChain: Array<Block>) {
     if (newChain.length <= this.chain.length) {
       global.console.log("New chain isn't long anought");
       return;

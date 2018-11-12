@@ -19,7 +19,7 @@ class Wallet {
         `;
   }
 
-  sign(dataHash) {
+  sign(dataHash: string) {
     return this.keyPair.sign(dataHash);
   }
 }
