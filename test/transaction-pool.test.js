@@ -3,7 +3,6 @@
  */
 const expect = require("chai").expect;
 const TransactionPool = require("../dist/components/wallet/transaction-pool").default;
-const Transaction = require("../dist/components/wallet/transaction").default;
 const Wallet = require("../dist/components/wallet").default;
 
 describe("Transaction pool", () => {
@@ -12,8 +11,7 @@ describe("Transaction pool", () => {
   beforeEach(() => {
     tp = new TransactionPool();
     wallet = new Wallet();
-    trx = Transaction.newTransaction(wallet, "address", 30);
-    tp.updateOrAddTransaction(trx);
+    trx = wallet.createTransaction("address", 30, tp);
   });
 
   it("trx added", () => {
@@ -28,5 +26,32 @@ describe("Transaction pool", () => {
     expect(
       JSON.stringify(tp.transactions.find(t => t.id === newTrx.id))
     ).not.eq(oldTrx);
+  });
+
+  describe("mixin valid and corrupt transactions", () => {
+    let validTransactions;
+
+    beforeEach(() => {
+      validTransactions = [...tp.transactions];
+      for (let i = 0; i < 6; i++) {
+        wallet = new Wallet();
+        trx = wallet.createTransaction(`some another address`, 30, tp);
+        if (i % 2 === 0) {
+          trx.input.amount = 1e6;
+        } else {
+          validTransactions.push(trx);
+        }
+      }
+    });
+
+    it("shows a difference between valid and corrupt transactions", () => {
+      expect(JSON.stringify(tp.transactions)).not.eq(
+        JSON.stringify(validTransactions)
+      );
+    });
+
+    it("grabs valid transactions", () => {
+      expect(tp.validTransactions()).members(validTransactions);
+    });
   });
 });
