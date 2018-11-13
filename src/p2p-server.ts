@@ -1,9 +1,9 @@
-import { Server, WebSocket } from "ws";
-import Blockchain from "./components/blockchain";
-import TransactionPool from "./components/wallet/transaction-pool";
-import Transaction from "./components/wallet/transaction";
+import * as WebSocket from 'ws';
+import Blockchain from './components/blockchain';
+import Transaction from './components/wallet/transaction';
+import TransactionPool from './components/wallet/transaction-pool';
 
-const port = process.env.WS_PORT || 2000;
+const port = Number(process.env.WS_PORT || 2000);
 const peers = process.env.PEERS ? process.env.PEERS.split(",") : [];
 
 enum MessageTypes {
@@ -22,7 +22,7 @@ class P2PServer {
   }
 
   listen() {
-    const server = new Server({ port });
+    const server = new WebSocket.Server({ port });
     server.on("connection", this.connectSocket.bind(this));
 
     this.connectToPeers();
@@ -47,7 +47,7 @@ class P2PServer {
 
   messageHandler(socket: WebSocket) {
     socket.on("message", message => {
-      const data = JSON.parse(message);
+      const data = JSON.parse(message as string);
       switch (data.type) {
         case MessageTypes.chain:
           this.blockchain.replaceChain(data.chain);
