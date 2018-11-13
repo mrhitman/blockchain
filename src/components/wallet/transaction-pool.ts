@@ -3,13 +3,13 @@ import Transaction from "./transaction";
 class TransactionPool {
   public transactions: Array<Transaction> = [];
 
-  updateOrAddTransaction(transaction: Transaction) {
-    let trxWithId = this.transactions.find(trx => trx.id === transaction.id);
+  updateOrAddTransaction(trx: Transaction) {
+    let trxWithId = this.transactions.find(trx => trx.id === trx.id);
 
     if (trxWithId) {
-      this.transactions[this.transactions.indexOf(trxWithId)] = transaction;
+      this.transactions[this.transactions.indexOf(trxWithId)] = trx;
     } else {
-      this.transactions.push(transaction);
+      this.transactions.push(trx);
     }
   }
 

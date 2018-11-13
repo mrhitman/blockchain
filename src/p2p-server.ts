@@ -57,7 +57,7 @@ class P2PServer {
           this.transactionPool.updateOrAddTransaction(data.transaction);
           break;
         default:
-          console.log("Invalid message type");
+          console.log("p2p server: Invalid message type");
       }
     });
   }

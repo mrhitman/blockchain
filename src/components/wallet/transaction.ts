@@ -37,19 +37,15 @@ class Transaction {
     return this.signTransaction(senderWallet);
   }
 
-  static newTransaction(
-    senderWallet: Wallet,
-    receipient: string,
-    amount: number
-  ) {
-    const transaction = new this();
+  static newTransaction(senderWallet: Wallet, receipient: string, amount: number) {
+    const trx = new this();
 
     if (amount > senderWallet.balance) {
       global.console.log(`Amount: ${amount} exceeds balance.`);
       return;
     }
 
-    transaction.outputs.push(
+    trx.outputs.push(
       ...[
         {
           amount: senderWallet.balance - amount,
@@ -59,7 +55,7 @@ class Transaction {
       ]
     );
 
-    return transaction.signTransaction(senderWallet);
+    return trx.signTransaction(senderWallet);
   }
 
   signTransaction(senderWallet: Wallet) {
