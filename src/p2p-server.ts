@@ -1,14 +1,23 @@
 import { Server, WebSocket } from "ws";
 import Blockchain from "./components/blockchain";
+import TransactionPool from "./components/wallet/transaction-pool";
+import Transaction from "./components/wallet/transaction";
 
 const port = process.env.WS_PORT || 2000;
 const peers = process.env.PEERS ? process.env.PEERS.split(",") : [];
 
+enum MessageTypes {
+  chain,
+  transaction
+}
 class P2PServer {
   protected blockchain: Blockchain;
+  protected transactionPool: TransactionPool;
   protected sockets: Array<WebSocket>;
-  constructor(blockchain) {
+
+  constructor(blockchain: Blockchain, tp: TransactionPool) {
     this.blockchain = blockchain;
+    this.transactionPool = tp;
     this.sockets = [];
   }
 
@@ -39,19 +48,38 @@ class P2PServer {
   messageHandler(socket: WebSocket) {
     socket.on("message", message => {
       const data = JSON.parse(message);
+      switch (data.type) {
+        case MessageTypes.chain:
+          this.blockchain.replaceChain(data.chain);
+          break;
 
-      this.blockchain.replaceChain(data);
+        case MessageTypes.transaction:
+          this.transactionPool.updateOrAddTransaction(data.transaction);
+          break;
+        default:
+          console.log("Invalid message type");
+      }
     });
   }
 
   sendChain(socket: WebSocket) {
-    socket.send(JSON.stringify(this.blockchain.chain));
+    socket.send(
+      JSON.stringify({ type: MessageTypes.chain, chain: this.blockchain.chain })
+    );
   }
 
   syncChains() {
-    this.sockets.map(socket => {
-      this.sendChain(socket);
-    });
+    this.sockets.map(this.sendChain.bind(this));
+  }
+
+  sendTransaction(socket: WebSocket, trx: Transaction) {
+    socket.send(
+      JSON.stringify({ type: MessageTypes.transaction, transaction: trx })
+    );
+  }
+
+  broadcastTransaction(trx: Transaction) {
+    this.sockets.map(socket => this.sendTransaction(socket, trx));
   }
 }
 

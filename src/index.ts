@@ -3,10 +3,14 @@ import * as express from "express";
 import Blockchain from "./components/blockchain";
 import * as bodyParser from "body-parser";
 import P2PServer from "./p2p-server";
+import TransactionPool from "./components/wallet/transaction-pool";
+import Wallet from "./components/wallet";
 
 const app = express();
 const bc = new Blockchain();
-const p2pserver = new P2PServer(bc);
+const wallet = new Wallet();
+const tp = new TransactionPool();
+const p2pserver = new P2PServer(bc, tp);
 
 app.use(bodyParser.json());
 
@@ -23,7 +27,17 @@ app.post("/mine", async (req, res) => {
   res.redirect("/blocks");
 });
 
-app.get("/wallet", (req, res) => {});
+app.get("/transactions", (req, res) => {
+  res.json(tp.transactions);
+});
+
+app.post("/transact", (req, res) => {
+  const { recipient, amount } = req.body;
+  const trx = wallet.createTransaction(recipient, amount, tp);
+
+  p2pserver.broadcastTransaction(trx);
+  res.redirect("/transactions");
+});
 
 const port = process.env.HTTP_PORT || 3000;
 app.listen(port, () => global.console.log(`Server started on ${port}`));
