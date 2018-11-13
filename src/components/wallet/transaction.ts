@@ -22,7 +22,26 @@ class Transaction {
     this.id = ChainUtil.id();
   }
 
-  static newTransaction(senderWallet: Wallet, receipient: string, amount: number) {
+  update(senderWallet: Wallet, receipient: string, amount: number) {
+    const senderOutput = this.outputs.find(
+      output => output.address === senderWallet.publicKey
+    );
+    if (amount > senderOutput.amount) {
+      global.console.log(`Amount: ${amount} exceeds balance.`);
+      return;
+    }
+
+    senderOutput.amount = senderOutput.amount -= amount;
+    this.outputs.push({ amount, address: receipient });
+
+    return this.signTransaction(senderWallet);
+  }
+
+  static newTransaction(
+    senderWallet: Wallet,
+    receipient: string,
+    amount: number
+  ) {
     const transaction = new this();
 
     if (amount > senderWallet.balance) {
@@ -40,8 +59,7 @@ class Transaction {
       ]
     );
 
-    transaction.signTransaction(senderWallet);
-    return transaction;
+    return transaction.signTransaction(senderWallet);
   }
 
   signTransaction(senderWallet: Wallet) {
@@ -51,6 +69,7 @@ class Transaction {
       address: senderWallet.publicKey,
       signature: senderWallet.sign(ChainUtil.hash(this.outputs))
     };
+    return this;
   }
 
   verifyTransaction() {

@@ -44,4 +44,25 @@ describe("Transaction", () => {
     trx.outputs[0].amount = 40000;
     expect(trx.verifyTransaction()).false;
   });
+
+  describe("Update", () => {
+    let nextAmount = 20;
+    let nextRecipient = "new recipient";
+
+    beforeEach(() => {
+      trx = trx.update(wallet, nextRecipient, nextAmount);
+    });
+
+    it("substracts the next amont from the sender's output", () => {
+      expect(
+        trx.outputs.find(output => output.address === wallet.publicKey).amount
+      ).eq(wallet.balance - amount - nextAmount);
+    });
+
+    it("outputs an amount for the next recipient", () => {
+      expect(
+        trx.outputs.find(output => output.address === nextRecipient).amount
+      ).eq(nextAmount);
+    });
+  });
 });
