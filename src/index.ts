@@ -1,7 +1,7 @@
 // require("dotenv").load();
 import * as express from "express";
-import Blockchain from "./components/blockchain";
 import * as bodyParser from "body-parser";
+import Blockchain from "./components/blockchain";
 import P2PServer from "./p2p-server";
 import TransactionPool from "./components/wallet/transaction-pool";
 import Wallet from "./components/wallet";
@@ -36,6 +36,7 @@ app.post("/transact", (req, res) => {
   const trx = wallet.createTransaction(recipient, amount, tp);
 
   p2pserver.broadcastTransaction(trx);
+
   res.redirect("/transactions");
 });
 
@@ -44,5 +45,6 @@ app.get("/public-key", (req, res) => {
 });
 
 const port = process.env.HTTP_PORT || 3000;
+
 app.listen(port, () => global.console.log(`Server started on ${port}`));
 p2pserver.listen();

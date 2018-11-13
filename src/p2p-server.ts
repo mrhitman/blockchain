@@ -1,7 +1,7 @@
-import * as WebSocket from 'ws';
-import Blockchain from './components/blockchain';
-import Transaction from './components/wallet/transaction';
-import TransactionPool from './components/wallet/transaction-pool';
+import * as WebSocket from "ws";
+import Blockchain from "./components/blockchain";
+import TransactionPool from "./components/wallet/transaction-pool";
+import Transaction from "./components/wallet/transaction";
 
 const port = Number(process.env.WS_PORT || 2000);
 const peers = process.env.PEERS ? process.env.PEERS.split(",") : [];
