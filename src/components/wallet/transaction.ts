@@ -1,4 +1,5 @@
 import ChainUtil from "../chain-util";
+import config from "../../config";
 import Wallet from ".";
 
 type InputType = null | {
@@ -37,25 +38,28 @@ class Transaction {
     return this.signTransaction(senderWallet);
   }
 
-  static newTransaction(senderWallet: Wallet, receipient: string, amount: number) {
+  static transactionsWithOutputs(senderWallet: Wallet, outputs) {
     const trx = new this();
+    trx.outputs.push(...outputs);
+    return trx.signTransaction(senderWallet);
+  }
 
+  static newTransaction(senderWallet: Wallet, receipient: string, amount: number) {
     if (amount > senderWallet.balance) {
       global.console.log(`Amount: ${amount} exceeds balance.`);
       return;
     }
 
-    trx.outputs.push(
-      ...[
-        {
-          amount: senderWallet.balance - amount,
-          address: senderWallet.publicKey
-        },
-        { amount, address: receipient }
-      ]
-    );
+    return Transaction.transactionsWithOutputs(senderWallet, [
+      { amount: senderWallet.balance - amount, address: senderWallet.publicKey },
+      { amount, address: receipient }
+    ]);
+  }
 
-    return trx.signTransaction(senderWallet);
+  static rewardTransaction(minerWallet, blockchainWallet) {
+    return Transaction.transactionsWithOutputs(blockchainWallet, [
+      { address: minerWallet.publicKey, amount: config.mining_reward }
+    ])
   }
 
   signTransaction(senderWallet: Wallet) {
