@@ -35,7 +35,7 @@ class Block {
   }
 
   static async mineBlock(lastBlock: Block, data) {
-    const forked = fork(`${__dirname}/mineHash.js`);
+    const forked = fork(`${__dirname}/mine-hash.js`);
     const p = new Promise((resolve, reject) => {
       forked.send({ lastBlock, data });
       forked.on("message", resolve);

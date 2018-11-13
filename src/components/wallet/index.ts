@@ -1,5 +1,7 @@
 import config from "../../config";
 import chainUtil from "../chain-util";
+import TransactionPool from "./transaction-pool";
+import Transaction from "./transaction";
 
 class Wallet {
   public balance: number;
@@ -21,6 +23,21 @@ class Wallet {
 
   sign(dataHash: string) {
     return this.keyPair.sign(dataHash);
+  }
+
+  createTransaction(recipient: string, amount: number, tp: TransactionPool) {
+    if (amount > this.balance) {
+      console.log(`Amount: ${amount} exceeds current balance: ${this.balance}`);
+      return;
+    }
+
+    let trx = tp.existingTransaction(this.publicKey);
+    trx = trx
+      ? trx.update(this, recipient, amount)
+      : Transaction.newTransaction(this, recipient, amount);
+
+    tp.updateOrAddTransaction(trx);
+    return trx;
   }
 }
 
