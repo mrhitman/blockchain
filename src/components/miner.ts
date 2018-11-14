@@ -22,12 +22,12 @@ class Miner {
     this.p2pServer = p2pServer;
   }
 
-  mine() {
+  async mine() {
     const validTransactions = this.transactionPool.validTransactions();
     validTransactions.push(
       Transaction.rewardTransaction(this.wallet, Wallet.blockchainWallet())
     );
-    const block = this.blockchain.addBlock(validTransactions);
+    const block = await this.blockchain.addBlock(validTransactions);
     this.p2pServer.syncChains();
     this.transactionPool.clear();
     this.p2pServer.broadcastClearTransactions();

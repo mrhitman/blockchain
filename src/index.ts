@@ -5,12 +5,14 @@ import Blockchain from "./components/blockchain";
 import P2PServer from "./p2p-server";
 import TransactionPool from "./components/wallet/transaction-pool";
 import Wallet from "./components/wallet";
+import Miner from "./components/miner";
 
 const app = express();
 const bc = new Blockchain();
 const wallet = new Wallet();
 const tp = new TransactionPool();
 const p2pserver = new P2PServer(bc, tp);
+const miner = new Miner(bc, tp, wallet, p2pserver);
 
 app.use(bodyParser.json());
 
@@ -42,6 +44,12 @@ app.post("/transact", (req, res) => {
 
 app.get("/public-key", (req, res) => {
   res.json({ publicKey: wallet.publicKey });
+});
+
+app.get("/mine-transactions", async (req, res) => {
+  const block = await miner.mine();
+  console.log(`New block added: ${block.toString()}`);
+  res.redirect("/blocks");
 });
 
 const port = process.env.HTTP_PORT || 3000;
