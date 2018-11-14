@@ -2,8 +2,8 @@
  * @global describe, it, beforeEach
  */
 const Wallet = require("../dist/components/wallet").default;
-const TransactionPool = require("../dist/components/wallet/transaction-pool")
-  .default;
+const Blockchain = require("../dist/components/blockchain").default;
+const TransactionPool = require("../dist/components/wallet/transaction-pool").default;
 const expect = require("chai").expect;
 
 describe("Wallet", () => {
@@ -12,6 +12,7 @@ describe("Wallet", () => {
   beforeEach(() => {
     wallet = new Wallet();
     tp = new TransactionPool();
+    bc = new Blockchain();
   });
 
   it("create", () => {
@@ -23,12 +24,12 @@ describe("Wallet", () => {
     beforeEach(() => {
       sendAmount = 50;
       recipient = "some address";
-      trx = wallet.createTransaction(recipient, sendAmount, tp);
+      trx = wallet.createTransaction(recipient, sendAmount, bc, tp);
     });
 
     describe("and doing the same transaction", () => {
       beforeEach(() => {
-        wallet.createTransaction(recipient, sendAmount, tp);
+        wallet.createTransaction(recipient, sendAmount, bc, tp);
       });
 
       it("soubles the sendAmount substracted from the wallet balance", () => {

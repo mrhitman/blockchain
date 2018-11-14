@@ -4,14 +4,16 @@
 const expect = require("chai").expect;
 const TransactionPool = require("../dist/components/wallet/transaction-pool").default;
 const Wallet = require("../dist/components/wallet").default;
+const Blockchain = require("../dist/components/blockchain").default;
 
 describe("Transaction pool", () => {
-  let tp, wallet, trx;
+  let tp, wallet, trx, bc;
 
   beforeEach(() => {
     tp = new TransactionPool();
     wallet = new Wallet();
-    trx = wallet.createTransaction("address", 30, tp);
+    bc = new Blockchain();
+    trx = wallet.createTransaction("address", 30, bc, tp);
   });
 
   it("trx added", () => {
@@ -40,7 +42,7 @@ describe("Transaction pool", () => {
       validTransactions = [...tp.transactions];
       for (let i = 0; i < 6; i++) {
         wallet = new Wallet();
-        trx = wallet.createTransaction(`some another address`, 30, tp);
+        trx = wallet.createTransaction(`some another address`, 30, bc, tp);
         if (i % 2 === 0) {
           trx.input.amount = 1e6;
         } else {
