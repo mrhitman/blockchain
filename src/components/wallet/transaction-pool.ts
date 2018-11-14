@@ -19,10 +19,7 @@ class TransactionPool {
 
   validTransactions() {
     return this.transactions.filter(trx => {
-      const outputTotal = trx.outputs.reduce(
-        (total, output) => total + output.amount,
-        0
-      );
+      const outputTotal = trx.outputs.reduce((total, output) => total + output.amount, 0);
 
       if (trx.input.amount !== outputTotal) {
         console.log(`Invalid trx from ${trx.input.address}`);

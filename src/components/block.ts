@@ -31,14 +31,7 @@ class Block {
   }
 
   static genesis() {
-    return new this(
-      "Genesis time",
-      "-",
-      "first hash",
-      [],
-      0,
-      config.difficulty
-    );
+    return new this("Genesis time", "-", "first hash", [], 0, config.difficulty);
   }
 
   static async mineBlock(lastBlock: Block, data) {
@@ -53,13 +46,7 @@ class Block {
     return new this(time, lastBlock.hash, hash, data, nonce, difficulty);
   }
 
-  static hash(
-    time: number,
-    lastHash: string,
-    data,
-    nonce: number,
-    difficulty: number
-  ) {
+  static hash(time: number, lastHash: string, data, nonce: number, difficulty: number) {
     return ChainUtil.hash(`${time}${lastHash}${data}${nonce}${difficulty}`);
   }
 

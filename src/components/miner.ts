@@ -10,12 +10,7 @@ class Miner {
   protected wallet: Wallet;
   protected p2pServer: P2PServer;
 
-  constructor(
-    blockchain: Blockchain,
-    tp: TransactionPool,
-    wallet: Wallet,
-    p2pServer: P2PServer
-  ) {
+  constructor(blockchain: Blockchain, tp: TransactionPool, wallet: Wallet, p2pServer: P2PServer) {
     this.blockchain = blockchain;
     this.transactionPool = tp;
     this.wallet = wallet;

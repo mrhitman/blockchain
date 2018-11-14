@@ -27,12 +27,7 @@ class Wallet {
     return this.keyPair.sign(dataHash);
   }
 
-  createTransaction(
-    recipient: string,
-    amount: number,
-    bc: Blockchain,
-    tp: TransactionPool
-  ) {
+  createTransaction(recipient: string, amount: number, bc: Blockchain, tp: TransactionPool) {
     this.balance = this.calculateBalance(bc);
 
     if (amount > this.balance) {
