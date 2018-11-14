@@ -31,7 +31,14 @@ class Block {
   }
 
   static genesis() {
-    return new this("Genesis time", "-", "first hash", [], 0, config.difficulty);
+    return new this(
+      "Genesis time",
+      "-",
+      "first hash",
+      [],
+      0,
+      config.difficulty
+    );
   }
 
   static async mineBlock(lastBlock: Block, data) {
@@ -46,7 +53,13 @@ class Block {
     return new this(time, lastBlock.hash, hash, data, nonce, difficulty);
   }
 
-  static hash(time: number, lastHash: string, data, nonce: number, difficulty: number) {
+  static hash(
+    time: number,
+    lastHash: string,
+    data,
+    nonce: number,
+    difficulty: number
+  ) {
     return ChainUtil.hash(`${time}${lastHash}${data}${nonce}${difficulty}`);
   }
 
@@ -56,9 +69,13 @@ class Block {
   }
 
   static adjustDifficulty(lastBlock: Block, time: number) {
-    return lastBlock.time + config.mine_rate > time
-      ? lastBlock.difficulty + 1
-      : lastBlock.difficulty - 1;
+    let difficulty =
+      lastBlock.time + config.mine_rate > time
+        ? lastBlock.difficulty + 1
+        : lastBlock.difficulty - 1;
+    difficulty = difficulty > config.max_difficulty ? config.max_difficulty : difficulty;
+    difficulty = difficulty < config.min_difficulty ? config.max_difficulty : difficulty;
+    return difficulty;
   }
 }
 

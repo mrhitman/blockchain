@@ -1,5 +1,4 @@
 import Block from "./block";
-import config from "../config";
 
 process.on("message", ({ lastBlock, data }) => {
   let hash, time;
@@ -12,7 +11,7 @@ process.on("message", ({ lastBlock, data }) => {
     difficulty = Block.adjustDifficulty(lastBlock, time);
     hash = Block.hash(time, lastBlock.hash, data, nonce, difficulty);
   } while (
-    hash.substring(0, config.difficulty) !== "0".repeat(config.difficulty)
+    hash.substring(0, difficulty) !== "0".repeat(difficulty)
   );
 
   process.send({
