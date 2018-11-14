@@ -8,7 +8,8 @@ const peers = process.env.PEERS ? process.env.PEERS.split(",") : [];
 
 enum MessageTypes {
   chain,
-  transaction
+  transaction,
+  clear_transactions
 }
 class P2PServer {
   protected blockchain: Blockchain;
@@ -56,6 +57,10 @@ class P2PServer {
         case MessageTypes.transaction:
           this.transactionPool.updateOrAddTransaction(data.transaction);
           break;
+
+        case MessageTypes.clear_transactions:
+          this.transactionPool.clear();
+          break;
         default:
           console.log("p2p server: Invalid message type");
       }
@@ -80,6 +85,12 @@ class P2PServer {
 
   broadcastTransaction(trx: Transaction) {
     this.sockets.map(socket => this.sendTransaction(socket, trx));
+  }
+
+  broadcastClearTransactions() {
+    this.sockets.map(socket =>
+      socket.send(JSON.stringify({ type: MessageTypes.clear_transactions }))
+    );
   }
 }
 

@@ -56,9 +56,9 @@ class Transaction {
     ]);
   }
 
-  static rewardTransaction(minerWallet, blockchainWallet) {
+  static rewardTransaction(minerWallet: Wallet, blockchainWallet: Wallet) {
     return Transaction.transactionsWithOutputs(blockchainWallet, [
-      { address: minerWallet.publicKey, amount: config.mining_reward }
+      { amount: config.mining_reward, address: minerWallet.publicKey }
     ])
   }
 

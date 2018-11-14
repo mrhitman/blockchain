@@ -3,6 +3,7 @@
  */
 const Transacton = require("../dist/components/wallet/transaction").default;
 const Wallet = require("../dist/components/wallet").default;
+const config = require("../dist/config").default;
 const expect = require("chai").expect;
 
 describe("Transaction", () => {
@@ -63,6 +64,18 @@ describe("Transaction", () => {
       expect(
         trx.outputs.find(output => output.address === nextRecipient).amount
       ).eq(nextAmount);
+    });
+  });
+
+  describe("create a reward trx", () => {
+    beforeEach(() => {
+      trx = Transacton.rewardTransaction(wallet, Wallet.blockchainWallet());
+    });
+
+    it("reward the miner's wallet", () => {
+      expect(
+        trx.outputs.find(output => output.address === wallet.publicKey).amount
+      ).eq(config.mining_reward);
     });
   });
 });

@@ -35,6 +35,10 @@ class TransactionPool {
       return true;
     });
   }
+
+  clear() {
+    this.transactions = [];
+  }
 }
 
 export default TransactionPool;

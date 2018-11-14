@@ -28,6 +28,11 @@ describe("Transaction pool", () => {
     ).not.eq(oldTrx);
   });
 
+  it("clears transactions", () => {
+    tp.clear();
+    expect(tp.transactions).length(0);
+  });
+
   describe("mixin valid and corrupt transactions", () => {
     let validTransactions;
 

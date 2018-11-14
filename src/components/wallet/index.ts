@@ -7,6 +7,7 @@ class Wallet {
   public balance: number;
   public keyPair: any;
   public publicKey: string;
+  public address: string;
 
   constructor() {
     this.balance = config.initial_balance;
@@ -38,6 +39,12 @@ class Wallet {
 
     tp.updateOrAddTransaction(trx);
     return trx;
+  }
+
+  static blockchainWallet() {
+    const wallet = new this();
+    wallet.address = "blockchain-wallet";
+    return wallet;
   }
 }
 
