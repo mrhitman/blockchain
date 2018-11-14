@@ -28,10 +28,12 @@ class TransactionPool {
         console.log(`Invalid trx from ${trx.input.address}`);
         return false;
       }
+
       if (!trx.verifyTransaction()) {
         console.log(`Invalid trx signature from ${trx.input.address}`);
         return false;
       }
+
       return true;
     });
   }

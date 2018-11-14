@@ -27,7 +27,12 @@ class Wallet {
     return this.keyPair.sign(dataHash);
   }
 
-  createTransaction(recipient: string, amount: number, bc: Blockchain, tp: TransactionPool) {
+  createTransaction(
+    recipient: string,
+    amount: number,
+    bc: Blockchain,
+    tp: TransactionPool
+  ) {
     this.balance = this.calculateBalance(bc);
 
     if (amount > this.balance) {
@@ -36,11 +41,14 @@ class Wallet {
     }
 
     let trx = tp.existingTransaction(this.publicKey);
-    trx = trx
-      ? trx.update(this, recipient, amount)
-      : Transaction.newTransaction(this, recipient, amount);
 
-    tp.updateOrAddTransaction(trx);
+    if (trx) {
+      trx.update(this, recipient, amount);
+    } else {
+      trx = Transaction.newTransaction(this, recipient, amount);
+      tp.updateOrAddTransaction(trx);
+    }
+
     return trx;
   }
 
@@ -49,9 +57,7 @@ class Wallet {
     let transactions = [];
 
     blockchain.chain.map(block =>
-      block.data.map(trx => {
-        transactions.push(trx);
-      })
+      block.data.map(trx => transactions.push(trx))
     );
 
     const walletInputTs = transactions.filter(
@@ -61,10 +67,8 @@ class Wallet {
     let startTime = 0;
 
     if (walletInputTs.length) {
-      const recentInputT = walletInputTs.reduce(
-        (prev, current) =>
-          prev.input.time > current.input.time ? prev : current,
-        0
+      const recentInputT = walletInputTs.reduce((prev, current) =>
+        prev.input.time > current.input.time ? prev : current
       );
 
       balance = recentInputT.outputs.find(
@@ -72,17 +76,17 @@ class Wallet {
       ).amount;
 
       startTime = recentInputT.input.time;
-
-      transactions.map(trx => {
-        if (trx.input.time > startTime) {
-          trx.outputs.find(output => {
-            if (output.address === this.publicKey) {
-              balance += output.amount;
-            }
-          });
-        }
-      });
     }
+
+    transactions.map(trx => {
+      if (trx.input.time > startTime) {
+        trx.outputs.find(output => {
+          if (output.address === this.publicKey) {
+            balance += output.amount;
+          }
+        });
+      }
+    });
 
     return balance;
   }

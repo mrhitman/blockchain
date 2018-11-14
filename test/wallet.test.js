@@ -3,11 +3,13 @@
  */
 const Wallet = require("../dist/components/wallet").default;
 const Blockchain = require("../dist/components/blockchain").default;
-const TransactionPool = require("../dist/components/wallet/transaction-pool").default;
+const config = require("../dist/config").default;
+const TransactionPool = require("../dist/components/wallet/transaction-pool")
+  .default;
 const expect = require("chai").expect;
 
 describe("Wallet", () => {
-  let wallet, tp;
+  let wallet, tp, bc;
 
   beforeEach(() => {
     wallet = new Wallet();
@@ -45,6 +47,32 @@ describe("Wallet", () => {
             .map(output => output.amount)
         ).members([sendAmount, sendAmount]);
       });
+    });
+  });
+
+  describe("calculating a balance", () => {
+    let addBalance, repeatAdd, senderWallet;
+
+    beforeEach(async () => {
+      senderWallet = new Wallet();
+      addBalance = 100;
+      repeatAdd = 3;
+      for (let i = 0; i < repeatAdd; i++) {
+        senderWallet.createTransaction(wallet.publicKey, addBalance, bc, tp);
+      }
+      await bc.addBlock(tp.transactions);
+    });
+
+    it("calculates the balance for the receipient", () => {
+      expect(wallet.calculateBalance(bc)).eq(
+        config.initial_balance + addBalance * repeatAdd
+      );
+    });
+
+    it("calculates the balance for the sender", () => {
+      expect(senderWallet.calculateBalance(bc)).eq(
+        config.initial_balance - addBalance * repeatAdd
+      );
     });
   });
 });
